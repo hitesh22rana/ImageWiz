@@ -1,13 +1,13 @@
 version: "3"
 
 services:
-    message-broker:
+    redis:
         image: redis:latest
-        container_name: message-broker
+        container_name: redis
         ports:
             - "6379:6379"
         volumes:
-            - message-broker-data:/data
+            - redis-data:/data
         networks:
             - imagewiz
 
@@ -15,11 +15,11 @@ services:
         image: hibiken/asynqmon:latest
         container_name: task-queue
         environment:
-            - REDIS_ADDR=message-broker:6379
+            - REDIS_ADDR=redis:6379
         ports:
             - "8080:8080"
         depends_on:
-            - message-broker
+            - redis
         networks:
             - imagewiz
 
@@ -27,4 +27,4 @@ networks:
     imagewiz:
 
 volumes:
-    message-broker-data:
+    redis-data:
